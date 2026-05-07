@@ -37,6 +37,17 @@ class AppTheme {
     brightness: .dark,
     visualDensity: .adaptivePlatformDensity,
     scaffoldBackgroundColor: Color(0xFF111827),
+    
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color(0xFF1F2937),
+      foregroundColor: Colors.white,
+      titleTextStyle: TextStyle(
+        fontWeight: .bold,
+        color: Colors.white,
+        fontSize: 24,
+      ),
+    ),
+
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       foregroundColor: Colors.white,
       backgroundColor: Color(0xFF3B82F6),
