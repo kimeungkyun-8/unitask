@@ -1,30 +1,25 @@
 import 'dart:convert';
-
+import 'dart:ffi';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:unitask/app/api_strings.dart';
+import 'package:unitask/core/models/result.dart';
 import 'package:unitask/models/auth_data.dart';
 
-class ApiService {
-  static final _hostUrl = 'https://daelim.fleecy.dev/functions/v1'; 
-  static final _signupUrl = '$_hostUrl/students/signup';
-  static final _loginUrl = '$_hostUrl/students/login';  
-
-  static bool _enableOnes = false;
-
-  static Future<bool?> signup({
+class AuthApiService {
+  final _signupUrl = '${AppStrings.apiHostUrl}/students/signup';
+   final _loginUrl = '${AppStrings.apiHostUrl}/students/login';  
+  
+  Future<Result<void>> signup({
     
     required String email,
     required String password,
     required String name,
 
-    
-
   })async {
-    if (_enableOnes) return null;
-       _enableOnes = true;
+    try {
 
-
-     final response = await http.post(
+        final response = await http.post(
       Uri.parse(_signupUrl),
      body: jsonEncode({
        'email': email,
@@ -34,20 +29,26 @@ class ApiService {
      );
 
      final statusCode = response.statusCode;
-    _enableOnes = false;
+  
   
 debugPrint('Response [$statusCode]: ${response.body}');
 
     if (statusCode != 200) {
-      return false;
+      return Failure(Exception('계정 생성을 실패헀습니다.'));
     } 
-    return true;
+      return Success(null);
+    } on Exception catch(e) {
+      return Failure(e);
+    }
     }
 
-    static Future<AuthData?> login({
+    Future<Result<AuthData>> login({
       required String email,
       required String password,
     }) async {
+      try {
+
+      
       final response = await http.post(
         Uri.parse(_loginUrl),
         body: jsonEncode({
@@ -60,13 +61,17 @@ debugPrint('Response [$statusCode]: ${response.body}');
 
      if (statusCode != 200) {
       debugPrint('로그인 API 에러: ${response.body}');
-      return null;
+      throw Exception('로그인에 실패했습니다.');
      }
 
      debugPrint('로그인 API 성공');
      
+     final authData = AuthData.fromJson(jsonDecode(response.body));
      
-     return AuthData.fromJson(response.body);
+     return Success(authData);
+     } on Exception catch(e) {
+        return Failure(e);
+      }
     }
   }
       
