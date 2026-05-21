@@ -7,8 +7,8 @@ import 'package:unitask/core/models/result.dart';
 import 'package:unitask/models/auth_data.dart';
 
 class AuthApiService {
-  final _signupUrl = '${AppStrings.apiHostUrl}/students/signup';
-   final _loginUrl = '${AppStrings.apiHostUrl}/students/login';  
+  static final _signupUrl = '${AppStrings.apiHostUrl}/students/signup';
+  static final _loginUrl = '${AppStrings.apiHostUrl}/students/login';  
   
   Future<Result<void>> signup({
     
